@@ -1,0 +1,92 @@
+body {
+  background: #3b4660;
+  font-family: Arial;
+  color: #fff;
+}
+
+#grid {
+  margin: 50px auto;
+  width: 600px;
+  border-top: 3px solid #282f41;
+  border-left: 3px solid #282f41;
+}
+
+#grid .row:after,
+#scoreboard:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+#grid .box {
+  width: 200px;
+  height: 200px;
+  float: left;
+  box-sizing: border-box;
+
+  border-right: 3px solid #282f41;
+  border-bottom: 3px solid #282f41;
+
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #fff;
+  text-align: center;
+  font-size: 84px;
+  font-weight: bold;
+  line-height: 200px;
+
+  cursor: crosshair;
+  transition: .2s font-size, .2s background-color;
+}
+
+#grid .box:hover {
+  font-size: 90px;
+  /*background-color: #4a5775;*/
+  background-color: rgba(0, 0, 0, 0.2);
+
+}
+
+#scoreboard {
+  margin: 40px 0;
+}
+
+#scoreboard .player {
+  float: left;
+  width: 50%;
+  padding: 0 20px;
+  line-height: 60px;
+  box-sizing: border-box;
+}
+
+#scoreboard .player .mark {
+  width: 60px;
+  font-size: 35px;
+  text-align: center;
+  background-color: #576580;
+  border-radius: 30px;
+}
+
+#scoreboard .player-x .mark {
+  float: right;
+}
+
+#scoreboard .player-o .mark {
+  float: left;
+}
+
+#scoreboard .player .score {
+  background-color: #2a3244;
+  padding: 2px 14px;
+  color: #939fba;
+  border-radius: 8px;
+  margin: 0 10px;
+}
+
+#scoreboard .player-x {
+  text-align: right;
+}
+
+#scoreboard .player-o {
+}
