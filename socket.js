@@ -5,22 +5,20 @@ let server = http.createServer();
 let io = socketio(server);
 
 io.on('connection', socket => {
-  socket.on('event', data => {
-    if (typeof data.type === 'undefined')
-      return
-
-    let { state, next } = data
+  console.log(socket)
+  socket.on('update', state => {
+    console.log(state)
     if (typeof state.room !== 'undefined') {
-      if (data.type == 'connect') {
-        socket.join(state.room)
-        if(next == 0 && io.sockets.clients(state.room).length == 2) {
-          next = 1
-        }
+      console.log('Connected and using ', state.room)
+      socket.join(state.room)
+      console.log(io.sockets.adapter.rooms[state.room])
+      if(state.next === 0 && io.sockets.adapter.rooms[state.room].length == 2) {
+        state.next = 1
       }
-
-      socket.emit(state, state.room)
+      socket.broadcast.to(state.room).emit('update', state)
     }
   });
   socket.on('disconnect', _ => {});
+  socket.on('error', error => console.log(error))
 });
 server.listen(3000);

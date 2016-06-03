@@ -4,6 +4,7 @@ import doMove from './move'
 const game = ({ size }) => {
 
   let state = {
+    next: 0,
     board: [],
     won: false
   }
@@ -45,9 +46,19 @@ const game = ({ size }) => {
     notify(state)
   }
 
+  const join = (room) => {
+    state = Object.assign({}, state,
+      {
+        room: room
+      }
+    )
+    notify(state)
+  }
+
   return {
     start,
     move,
+    join,
     subscribe
   }
 }

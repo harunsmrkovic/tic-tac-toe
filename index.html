@@ -11,18 +11,24 @@
   </head>
   <body>
 
-    <div id="scoreboard">
-      <div class="player player-x">
-        <span class="score">0</span>
-        <span class="mark">X</span>
+    <div id="game">
+      <div id="scoreboard">
+        <div class="player player-x">
+          <span class="score">0</span>
+          <span class="mark">X</span>
+        </div>
+        <div class="player player-o">
+          <span class="mark">O</span>
+          <span class="score">0</span>
+        </div>
       </div>
-      <div class="player player-o">
-        <span class="mark">O</span>
-        <span class="score">0</span>
-      </div>
+
+      <div id="board"></div>
     </div>
 
-    <div id="board"></div>
+    <div id="start">
+      <a class="startBtn">Start your room</a> or join a room: <input type="text" id="room" name="room" placeholder="Enter room id"><input type="button" class="join" value="Join">
+    </div>
 
     <script src="bundle.js"></script>
   </body>
