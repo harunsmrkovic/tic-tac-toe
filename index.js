@@ -33,8 +33,7 @@ const render = ($board) => {
 }
 
 const send = (state) => {
-  if(state.nowPlaying !== player)
-    socket.emit('update', state)
+  socket.emit('update', state)
 }
 
 // Subscribe
