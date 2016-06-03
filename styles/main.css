@@ -8,10 +8,6 @@ body {
   display: none;
 }
 
-#game.active {
-  display: block;
-}
-
 #board {
   margin: 50px auto;
   width: 600px;
