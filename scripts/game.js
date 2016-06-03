@@ -14,10 +14,10 @@ const game = ({ size }) => {
     subscribers.push(callback)
   }
 
-  const notify = (state) => {
+  const notify = (action, state) => {
     _.each(subscribers, subscriber => {
       console.info('New state is', JSON.stringify(state, null, 2))
-      subscriber(state)
+      subscriber(action, state)
     })
     return true
   }
@@ -32,18 +32,22 @@ const game = ({ size }) => {
         board: initBoard(size)
       }
     )
-    notify(state)
+    notify('INIT', state)
   }
 
   const move = (x, y, player) => {
-    const board = doMove(state.board, x, y, player)
-    state = Object.assign({}, state,
-      {
-        board,
-        won: didWon({ board })
-      }
-    )
-    notify(state)
+    console.log(player, state.nowPlaying, player === state.nowPlaying)
+    if (player === state.nowPlaying) {
+      const board = doMove(state.board, x, y, state.nowPlaying)
+      state = Object.assign({}, state,
+        {
+          board,
+          won: didWon({ board }),
+          nowPlaying: 1+Math.abs(state.nowPlaying-2)
+        }
+      )
+      notify('MOVE', state)
+    }
   }
 
   const join = (room) => {
@@ -52,7 +56,12 @@ const game = ({ size }) => {
         room: room
       }
     )
-    notify(state)
+    notify('JOIN', state)
+  }
+
+  const update = (newState) => {
+    state = Object.assign({}, newState)
+    notify('UPDATE', state)
   }
 
   const start = () => {
@@ -61,7 +70,7 @@ const game = ({ size }) => {
         nowPlaying: 1
       }
     )
-    notify(state)
+    notify('START', state)
   }
 
   return {
@@ -69,7 +78,8 @@ const game = ({ size }) => {
     move,
     join,
     subscribe,
-    start
+    start,
+    update
   }
 }
 

@@ -5,14 +5,17 @@ import io from 'socket.io-client'
 
 // Initialize the game
 const tictac = game({ size: 3 })
+let player = 2
 
 // Socket
 let socket = io('http://localhost:3000');
-socket.emit('hello!')
 
 // Render boxes
 const render = ($board) => {
-  return ({ board }) => {
+  return ({ board, nowPlaying }) => {
+    // Update text
+    const status = ['Waiting for other player...', 'X is on the move', 'O is on the move']
+    $('#status').html(status[nowPlaying])
 
     // Update boxes
     const letter = { 1: 'X', 2: 'O' }
@@ -30,8 +33,8 @@ const render = ($board) => {
 }
 
 const send = (state) => {
-  console.info('send state', state)
-  socket.emit('update', state)
+  if(state.nowPlaying !== player)
+    socket.emit('update', state)
 }
 
 // Subscribe
@@ -46,24 +49,26 @@ const startGame = (room) => {
   $('#start').hide()
 
   $('#board .box').on('click', function(){
-    tictac.move($(this).attr('data-x'), $(this).attr('data-y'), 1)
+    tictac.move($(this).attr('data-x'), $(this).attr('data-y'), player)
   })
 
   socket.on('update', state => {
     console.log('dolazi emit', state, room)
-    render($('#board'))(state)
+    // render($('#board'))(state)
+    tictac.update(state)
   })
 
   socket.on('joined', state => {
     console.warn('joined')
+    player = 1
     tictac.start()
   })
 }
 
 const startRoom = (room) => {
   tictac.join(room)
-  socket.emit('join', room)
   startGame(room)
+  socket.emit('join', room)
 }
 
 startRoom(1234)
