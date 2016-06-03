@@ -4,7 +4,7 @@ import doMove from './move'
 const game = ({ size }) => {
 
   let state = {
-    next: 0,
+    nowPlaying: 0,
     board: [],
     won: false
   }
@@ -26,7 +26,7 @@ const game = ({ size }) => {
     return [...Array(size)].map(_ => [...Array(size)].map(_ => 0))
   }
 
-  const start = () => {
+  const init = () => {
     state = Object.assign({}, state,
       {
         board: initBoard(size)
@@ -55,11 +55,21 @@ const game = ({ size }) => {
     notify(state)
   }
 
+  const start = () => {
+    state = Object.assign({}, state,
+      {
+        nowPlaying: 1
+      }
+    )
+    notify(state)
+  }
+
   return {
-    start,
+    init,
     move,
     join,
-    subscribe
+    subscribe,
+    start
   }
 }
 

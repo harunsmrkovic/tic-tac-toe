@@ -6,8 +6,6 @@ import io from 'socket.io-client'
 // Initialize the game
 const tictac = game({ size: 3 })
 
-let room = 123
-
 // Socket
 let socket = io('http://localhost:3000');
 socket.emit('hello!')
@@ -32,6 +30,7 @@ const render = ($board) => {
 }
 
 const send = (state) => {
+  console.info('send state', state)
   socket.emit('update', state)
 }
 
@@ -39,8 +38,8 @@ const send = (state) => {
 tictac.subscribe(render($('#board')))
 tictac.subscribe(send)
 
-const startGame = () => {
-  tictac.start()
+const startGame = (room) => {
+  tictac.init()
 
   // Update general UI
   $('#game').show()
@@ -51,19 +50,24 @@ const startGame = () => {
   })
 
   socket.on('update', state => {
-    console.log('ide emit', state)
+    console.log('dolazi emit', state, room)
+    render($('#board'))(state)
+  })
 
-    if(state.room === room)
-      render($('#board'))(state)
+  socket.on('joined', state => {
+    console.warn('joined')
+    tictac.start()
   })
 }
 
-const startRoom = () => {
+const startRoom = (room) => {
   tictac.join(room)
-  startGame()
+  socket.emit('join', room)
+  startGame(room)
 }
 
+startRoom(1234)
 
-$('.startBtn').on('click', () => {
-  startRoom()
-})
+// $('.startBtn').on('click', () => {
+//   startRoom()
+// })
