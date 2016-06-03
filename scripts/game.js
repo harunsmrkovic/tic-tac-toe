@@ -1,34 +1,54 @@
 import didWon from './won'
+import doMove from './move'
 
 const game = ({ size }) => {
+
+  let state = {
+    board: [],
+    won: false
+  }
+
+  let subscribers = []
+  const subscribe = (callback) => {
+    subscribers.push(callback)
+  }
+
+  const notify = (state) => {
+    _.each(subscribers, subscriber => {
+      console.info('New state is', JSON.stringify(state, null, 2))
+      subscriber(state)
+    })
+    return true
+  }
 
   const initBoard = () => {
     return [...Array(size)].map(_ => [...Array(size)].map(_ => 0))
   }
 
   const start = () => {
-    return initBoard(size)
+    state = Object.assign({}, state,
+      {
+        board: initBoard(size)
+      }
+    )
+    notify(state)
   }
 
-  const move = (board, x, y, player) => {
-    x = parseInt(x)
-    y = parseInt(y)
-
-    if(board[x][y] !== 0) {
-      return board
-    }
-
-    return board.map((xa, nx) => xa.map((val, ny) => (x === nx && y === ny) ? player : val))
-  }
-
-  const won = (board) => {
-    return didWon({ board })
+  const move = (x, y, player) => {
+    const board = doMove(state.board, x, y, player)
+    state = Object.assign({}, state,
+      {
+        board,
+        won: didWon({ board })
+      }
+    )
+    notify(state)
   }
 
   return {
     start,
     move,
-    won
+    subscribe
   }
 }
 
