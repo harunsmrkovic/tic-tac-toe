@@ -1,7 +1,7 @@
 {
   "name": "tic-tac-toe",
   "version": "1.0.0",
-  "description": "Tic Tac Toe with Redux and websockets",
+  "description": "Tic Tac Toe with Redux-like implementation and websockets",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --progress --colors --port 8888",
