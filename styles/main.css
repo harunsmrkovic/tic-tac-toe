@@ -4,14 +4,14 @@ body {
   color: #fff;
 }
 
-#grid {
+#board {
   margin: 50px auto;
   width: 600px;
   border-top: 3px solid #282f41;
   border-left: 3px solid #282f41;
 }
 
-#grid .row:after,
+#board:after,
 #scoreboard:after {
   visibility: hidden;
   display: block;
@@ -21,7 +21,7 @@ body {
   height: 0;
 }
 
-#grid .box {
+#board .box {
   width: 200px;
   height: 200px;
   float: left;
@@ -41,7 +41,7 @@ body {
   transition: .2s font-size, .2s background-color;
 }
 
-#grid .box:hover {
+#board .box:hover {
   font-size: 90px;
   /*background-color: #4a5775;*/
   background-color: rgba(0, 0, 0, 0.2);
