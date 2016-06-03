@@ -11,12 +11,10 @@ let room = 123
 // Socket
 let socket = io('http://localhost:3000');
 socket.emit('hello!')
+
 // Render boxes
 const render = ($board) => {
   return ({ board }) => {
-    // Update general UI
-    $('#game').show()
-    $('#start').hide()
 
     // Update boxes
     const letter = { 1: 'X', 2: 'O' }
@@ -43,6 +41,10 @@ tictac.subscribe(send)
 
 const startGame = () => {
   tictac.start()
+
+  // Update general UI
+  $('#game').show()
+  $('#start').hide()
 
   $('#board .box').on('click', function(){
     tictac.move($(this).attr('data-x'), $(this).attr('data-y'), 1)
