@@ -10,14 +10,19 @@ const game = ({ size }) => {
   }
 
   let subscribers = []
-  const subscribe = (callback) => {
-    subscribers.push(callback)
+  const subscribe = (callback, actions = []) => {
+    subscribers.push({
+      callback,
+      actions
+    })
   }
 
   const notify = (action, state) => {
     _.each(subscribers, subscriber => {
-      console.info('New state is', JSON.stringify(state, null, 2))
-      subscriber(action, state)
+      if(!subscriber.actions.length || subscriber.actions.includes(action)){
+        console.info('Notify about new state:', JSON.stringify(state, null, 2))
+        subscriber.callback(state)
+      }
     })
     return true
   }

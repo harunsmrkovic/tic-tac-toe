@@ -39,7 +39,7 @@ const send = (state) => {
 
 // Subscribe
 tictac.subscribe(render($('#board')))
-tictac.subscribe(send)
+tictac.subscribe(send, ['INIT', 'MOVE', 'JOIN', 'START'])
 
 const startGame = (room) => {
   tictac.init()
