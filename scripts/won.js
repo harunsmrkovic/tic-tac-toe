@@ -40,9 +40,6 @@ const won = ({ board }) => {
 
     _.each(crossed, (line, place) => {
       if(line.x === board.length || line.o === board.length){
-        // if(winner){
-        //   throw new Error('Invalid board, multiple winners ocurred')
-        // }
         winner = {
           place,
           winner: (line.x === board.length) ? 1 : 2
