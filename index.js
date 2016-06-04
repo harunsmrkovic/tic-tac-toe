@@ -52,12 +52,12 @@ const renderStatus = ($status) => {
     } else {
       $('.box .line').hide()
     }
+  }
+}
 
-    // Updates the scoardboard
-    if(scores) {
-      $status.find('.player-x > .score').text(scores.x)
-      $status.find('.player-o > .score').text(scores.o)
-    }
+const increaseScore = ($status) => {
+  return (action, { scores, won }) => {
+    $status.find(`[data-player="${won.winner}"] > .score`).text(scores[won.winner])
   }
 }
 
@@ -132,7 +132,7 @@ const findWinningCoordinates = (won) => {
 
 const nextGame = (action, state) => {
   const { won } = state
-  if(won && player == 1 && action.type !== 'INCREASE_SCORE') {
+  if(won && player == 1) {
     tictac.dispatch({ type: 'INCREASE_SCORE', winner: won.winner })
     setTimeout(() => {
       tictac.dispatch({ type: 'INIT', size: 3 })
@@ -149,8 +149,11 @@ tictac.subscribe(send)
 // Status rendering
 tictac.subscribe(renderStatus($('#scoreboard')))
 
-// Status rendering
-tictac.subscribe(nextGame)
+// Winner checker
+tictac.subscribe(nextGame, ['MOVE'])
+
+// Scoreboard increaser
+tictac.subscribe(increaseScore($('#scoreboard')), ['INCREASE_SCORE'])
 
 // Start game at random room
 const hashRoom = window.location.hash && window.location.hash.substr(1)
