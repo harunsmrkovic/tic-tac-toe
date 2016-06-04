@@ -133,7 +133,6 @@ const findWinningCoordinates = (won) => {
 const nextGame = (action, state) => {
   const { won } = state
   if(won && player == 1) {
-    tictac.dispatch({ type: 'INCREASE_SCORE', winner: won.winner })
     setTimeout(() => {
       tictac.dispatch({ type: 'INIT', size: 3 })
     }, 5000)
