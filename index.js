@@ -35,9 +35,13 @@ const render = ($board) => {
 
 const renderStatus = ($status) => {
   return ({ nowPlaying }) => {
-    // Update text
-    const status = ['Waiting for other player...', 'X is on the move', 'O is on the move']
-    $status.text(status[nowPlaying])
+    // Update colors
+    if(nowPlaying){
+      $status.find(`[data-player="${nowPlaying}"] > .mark`).removeClass('inactive')
+    }
+    else {
+      $status.find('.player > .mark').addClass('inactive')
+    }
   }
 }
 
@@ -86,7 +90,7 @@ tictac.subscribe(render($('#board')))
 tictac.subscribe(send, ['INIT', 'MOVE', 'JOIN', 'START'])
 
 // Status rendering
-tictac.subscribe(renderStatus($('#status')), ['MOVE', 'JOIN'])
+tictac.subscribe(renderStatus($('#scoreboard')))
 
 // Start game at random room
 const hashRoom = window.location.hash && window.location.hash.substr(1)

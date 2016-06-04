@@ -68,6 +68,10 @@ body {
   border-radius: 30px;
 }
 
+#scoreboard .player .mark.inactive {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 #scoreboard .player-x .mark {
   float: right;
 }
