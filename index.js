@@ -12,7 +12,7 @@ let socket = io('http://localhost:3000');
 
 // Render boxes
 const render = ($board) => {
-  return ({ board }) => {
+  return (action, { board }) => {
 
 
     // Update boxes
@@ -31,15 +31,15 @@ const render = ($board) => {
 }
 
 const renderStatus = ($status) => {
-  return ({ nowPlaying }) => {
+  return (action, { nowPlaying }) => {
     // Update text
     const status = ['Waiting for other player...', 'X is on the move', 'O is on the move']
     $status.text(status[nowPlaying])
   }
 }
 
-const send = (state) => {
-  socket.emit('update', state)
+const send = (action, state) => {
+  socket.emit('update', action)
 }
 
 
