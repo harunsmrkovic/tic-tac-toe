@@ -45,7 +45,7 @@ const send = (state) => {
 
 
 const startGame = (room) => {
-  tictac.dispatch({ type: 'INIT', room: room })
+  tictac.dispatch({ type: 'INIT', room: room, size: 3 })
 
   // Update general UI
   $('#game').show()
