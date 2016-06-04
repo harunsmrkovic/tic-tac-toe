@@ -19,15 +19,16 @@ const $joinRoom = $('#join-room')
 // Render boxes
 const render = ($board) => {
   return (action, { board }) => {
+    console.log('called', board)
     // Update boxes
-    const letter = { 1: 'X', 2: 'O' }
+    const letter = { 0: '', 1: 'X', 2: 'O' }
     return _.flatMap(board, (xa, x) => {
       return xa.map((player, y) => {
-        const $field = $(`.box[data-x=${x}][data-y=${y}]`)
+        const $field = $(`.box[data-x=${x}][data-y=${y}] .sign`)
         if ($field.length) {
           $field.text(letter[player])
         } else {
-          return $board.append(`<div class="box" data-x="${x}" data-y="${y}"></div>`)
+          return $board.append(`<div class="box win" data-x="${x}" data-y="${y}"><div class="sign"></div><div class="line line1"></div><div class="line line2"></div><div class="line line3"></div><div class="line line4"></div></div>`)
         }
       })
     })
@@ -35,11 +36,21 @@ const render = ($board) => {
 }
 
 const renderStatus = ($status) => {
-  return (action, { nowPlaying }) => {
+  return (action, { nowPlaying, won }) => {
     // Update colors
     $status.find('.player > .mark').addClass('inactive')
     if(nowPlaying){
       $status.find(`[data-player="${nowPlaying}"] > .mark`).removeClass('inactive')
+    }
+
+    // If won cross over the winning combination
+    if(won) {
+      const { fields, line } = findWinningCoordinates(won)
+      _.each(fields, field => {
+        $(`.box[data-x="${field[0]}"][data-y="${field[1]}"] .line${line}`).show()
+      })
+    } else {
+      $('.box .line').hide()
     }
   }
 }
@@ -72,7 +83,7 @@ const startGame = (room) => {
   })
 
   // Join the room at server
-  socket.emit('joinRoom', room)
+  socket.emit('join', room)
   window.location.hash = room
   $joinRoom.val(room)
 }
@@ -85,6 +96,42 @@ $joinRoom.on('keyup', (e) => {
   }
 })
 
+// Find the winning fields
+const findWinningCoordinates = (won) => {
+  switch (won.place) {
+    case 'diagonal1':
+      return {
+        fields: [[0, 0], [1, 1], [2, 2]],
+        line: 3
+      }
+    case 'diagonal2':
+      return {
+        fields: [[0, 2], [1, 1], [2, 0]],
+        line: 4
+      }
+    case 'horizontal':
+      return {
+        fields: [[won.line, 0], [won.line, 1], [won.line, 2]],
+        line: 2
+      }
+    case 'vertical':
+      return {
+        fields: [[0, won.line], [1, won.line], [2, won.line]],
+        line: 1
+      }
+    default:
+      return false
+  }
+}
+
+const nextGame = (action, state) => {
+  if(state.won && player == 1) {
+    setTimeout(() => {
+      tictac.dispatch({ type: 'INIT', size: 3 })
+    }, 5000)
+  }
+}
+
 // Game rendering
 tictac.subscribe(render($('#board')))
 
@@ -93,6 +140,9 @@ tictac.subscribe(send)
 
 // Status rendering
 tictac.subscribe(renderStatus($('#scoreboard')))
+
+// Status rendering
+tictac.subscribe(nextGame)
 
 // Start game at random room
 const hashRoom = window.location.hash && window.location.hash.substr(1)

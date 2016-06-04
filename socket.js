@@ -11,7 +11,7 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('joinRoom', room => {
+  socket.on('join', room => {
     console.log('Room is ', room)
     socket.join(room)
     socket.broadcast.to(room).emit('joined')

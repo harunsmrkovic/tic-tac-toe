@@ -8,7 +8,8 @@ const mutate = (action, state) => {
     case 'INIT':
       return cp(state, {
         board: initBoard(action.size),
-        room: action.room
+        room: action.room ? action.room : state.room,
+        won: false
       })
     case 'START':
       return cp(state, {
@@ -22,6 +23,7 @@ const mutate = (action, state) => {
       if (state.board[action.x][action.y] > 0) return state
 
       const board = doMove(state.board, action.x, action.y, state.nowPlaying)
+
       return cp(state, {
           board,
           won: didWon({ board }),

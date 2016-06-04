@@ -22,7 +22,8 @@ describe('Mutation check', function() {
       ),
       {
         room: 1337,
-        board: [[0,0,0],[0,0,0],[0,0,0]]
+        board: [[0,0,0],[0,0,0],[0,0,0]],
+        won: false
       }
     )
   })
@@ -90,6 +91,19 @@ describe('Mutation check', function() {
       {
         board: [[0,0,0],[0,0,0],[0,0,0]],
         nowPlaying: 2
+      }
+    )
+  })
+
+  it('should return won object if the player X wins', function() {
+    assert.deepEqual(
+      mutate(
+        { type: 'MOVE', x: 2, y: 2, player: 1 },
+        { board: [[1, 0, 0],[0, 1, 0],[0, 0, 0]], nowPlaying: 1 }
+      ).won,
+      {
+        place: 'diagonal1',
+        winner: 1
       }
     )
   })
