@@ -103,7 +103,7 @@ describe('Mutation check', function() {
       ).won,
       {
         place: 'diagonal1',
-        winner: 1
+        player: 1
       }
     )
   })

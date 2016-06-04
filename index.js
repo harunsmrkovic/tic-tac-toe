@@ -57,7 +57,7 @@ const renderStatus = ($status) => {
 
 const increaseScore = ($status) => {
   return (action, { scores, won }) => {
-    $status.find(`[data-player="${won.winner}"] > .score`).text(scores[won.winner])
+    $status.find(`[data-player="${won.player}"] > .score`).text(scores[won.player])
   }
 }
 
@@ -135,7 +135,7 @@ const findWinningCoordinates = (won) => {
 const nextGame = (action, state) => {
   const { won } = state
   if(won && player == 1) {
-    tictac.dispatch({ type: 'INCREASE_SCORE', winner: won.winner })
+    if(won.player) tictac.dispatch({ type: 'INCREASE_SCORE', winner: won.player })
     setTimeout(() => {
       tictac.dispatch({ type: 'INIT', size: 3 })
     }, 5000)

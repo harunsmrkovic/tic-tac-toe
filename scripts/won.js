@@ -42,7 +42,7 @@ const won = ({ board }) => {
       if(line.x === board.length || line.o === board.length){
         winner = {
           place,
-          winner: (line.x === board.length) ? 1 : 2
+          player: (line.x === board.length) ? 1 : 2
         }
 
         if(['horizontal', 'vertical'].includes(place)){
@@ -50,6 +50,11 @@ const won = ({ board }) => {
         }
       }
     })
+  }
+
+  console.log(!winner, board, !board.filter((row) => row.includes(0)).length)
+  if(!winner && !board.filter((row) => row.includes(0)).length) {
+    return { player: false }
   }
 
   return winner;
