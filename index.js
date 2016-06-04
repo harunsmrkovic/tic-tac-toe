@@ -18,7 +18,7 @@ const $joinRoom = $('#join-room')
 
 // Render boxes
 const render = ($board) => {
-  return ({ board }) => {
+  return (action, { board }) => {
     // Update boxes
     const letter = { 1: 'X', 2: 'O' }
     return _.flatMap(board, (xa, x) => {
@@ -35,7 +35,7 @@ const render = ($board) => {
 }
 
 const renderStatus = ($status) => {
-  return ({ nowPlaying }) => {
+  return (action, { nowPlaying }) => {
     // Update colors
     if(nowPlaying){
       $status.find(`[data-player="${nowPlaying}"] > .mark`).removeClass('inactive')

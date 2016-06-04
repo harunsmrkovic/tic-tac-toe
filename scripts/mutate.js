@@ -6,9 +6,14 @@ import { cp } from './helpers'
 const mutate = (action, state) => {
   switch(action.type) {
     case 'INIT':
-      return cp(state, { board: initBoard(action.size), room: action.room })
+      return cp(state, {
+        board: initBoard(action.size),
+        room: action.room
+      })
     case 'START':
-      return cp(state, { nowPlaying: 1 })
+      return cp(state, {
+        nowPlaying: 1
+      })
     case 'MOVE':
       // Can't move if it's not user's turn to play
       if (action.player !== state.nowPlaying) return state
@@ -20,7 +25,7 @@ const mutate = (action, state) => {
       return cp(state, {
           board,
           won: didWon({ board }),
-          nowPlaying: 1+Math.abs(state.nowPlaying-2)
+          nowPlaying: 1 + Math.abs(state.nowPlaying-2)
         }
       )
     default:
