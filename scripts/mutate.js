@@ -34,7 +34,7 @@ const mutate = (action, state) => {
       const x = state.scores && state.scores[1] ? state.scores[1] : 0
       const o = state.scores && state.scores[2] ? state.scores[2] : 0
       return cp(state, {
-        scores: { 1: (state.won.winner === 1) ? x+1 : x, 2: (state.won.winner === 2) ? o+1 : o }
+        scores: { 1: (state.won.player === 1) ? x+1 : x, 2: (state.won.player === 2) ? o+1 : o }
       })
     default:
       return state
