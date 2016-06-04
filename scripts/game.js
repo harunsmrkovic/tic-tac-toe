@@ -23,7 +23,7 @@ const game = () => {
 
   const notify = (action, state) => {
     _.each(subscribers, subscriber => {
-      if(!subscriber.actions.length || subscriber.actions.includes(action)){
+      if(!subscriber.actions.length || subscriber.actions.includes(action.type)){
         console.info('Notify about new state:', JSON.stringify(state, null, 2))
         subscriber.callback(action, state)
       }

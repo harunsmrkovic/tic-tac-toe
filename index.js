@@ -2,6 +2,7 @@ import game from './scripts/game'
 import _ from 'lodash'
 import $ from 'jquery'
 import io from 'socket.io-client'
+import { cp } from './scripts/helpers'
 
 const roomNoMin = 1000
 const roomNoMax = 9999
@@ -41,8 +42,11 @@ const renderStatus = ($status) => {
   }
 }
 
+// When the socket sends an update
 const send = (action, state) => {
-  socket.emit('update', action)
+  if(!action.fromSocket) {
+    socket.emit('update', cp(action, { room: state.room }))
+  }
 }
 
 const startGame = (room) => {
@@ -56,17 +60,18 @@ const startGame = (room) => {
 
   // Dispatching actions from other players
   socket.on('update', update => {
-    tictac.dispatch(update)
+    tictac.dispatch(cp(update, { fromSocket: true }))
   })
 
   // Wait for other players to join
   socket.on('joined', state => {
     player = 1
+    console.log('dosao neko')
     tictac.dispatch({ type: 'START' })
   })
 
   // Join the room at server
-  socket.emit('join', room)
+  socket.emit('joinRoom', room)
   window.location.hash = room
   $joinRoom.val(room)
 }

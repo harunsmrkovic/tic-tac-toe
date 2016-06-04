@@ -1,6 +1,7 @@
 import doMove from './move'
 import didWon from './won'
 import initBoard from './initBoard'
+import { cp } from './helpers'
 
 const mutate = (action, state) => {
   switch(action.type) {
@@ -25,10 +26,6 @@ const mutate = (action, state) => {
     default:
       return state
   }
-}
-
-const cp = (state, body) => {
-  return Object.assign({}, state, body)
 }
 
 export default mutate
