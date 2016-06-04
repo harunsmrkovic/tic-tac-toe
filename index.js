@@ -37,11 +37,9 @@ const render = ($board) => {
 const renderStatus = ($status) => {
   return (action, { nowPlaying }) => {
     // Update colors
+    $status.find('.player > .mark').addClass('inactive')
     if(nowPlaying){
       $status.find(`[data-player="${nowPlaying}"] > .mark`).removeClass('inactive')
-    }
-    else {
-      $status.find('.player > .mark').addClass('inactive')
     }
   }
 }
@@ -70,7 +68,6 @@ const startGame = (room) => {
   // Wait for other players to join
   socket.on('joined', state => {
     player = 1
-    console.log('dosao neko')
     tictac.dispatch({ type: 'START' })
   })
 
@@ -92,7 +89,7 @@ $joinRoom.on('keyup', (e) => {
 tictac.subscribe(render($('#board')))
 
 // Action sending
-tictac.subscribe(send, ['INIT', 'MOVE', 'JOIN', 'START'])
+tictac.subscribe(send)
 
 // Status rendering
 tictac.subscribe(renderStatus($('#scoreboard')))
