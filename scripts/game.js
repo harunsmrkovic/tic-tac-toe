@@ -31,10 +31,11 @@ const game = ({ size }) => {
     return [...Array(size)].map(_ => [...Array(size)].map(_ => 0))
   }
 
-  const init = () => {
+  const init = (room) => {
     state = Object.assign({}, state,
       {
-        board: initBoard(size)
+        board: initBoard(size),
+        room
       }
     )
     notify('INIT', state)

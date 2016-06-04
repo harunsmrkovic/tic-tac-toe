@@ -12,10 +12,8 @@ let socket = io('http://localhost:3000');
 
 // Render boxes
 const render = ($board) => {
-  return ({ board, nowPlaying }) => {
-    // Update text
-    const status = ['Waiting for other player...', 'X is on the move', 'O is on the move']
-    $('#status').html(status[nowPlaying])
+  return ({ board }) => {
+
 
     // Update boxes
     const letter = { 1: 'X', 2: 'O' }
@@ -32,16 +30,22 @@ const render = ($board) => {
   }
 }
 
+const renderStatus = ($status) => {
+  return ({ nowPlaying }) => {
+    // Update text
+    const status = ['Waiting for other player...', 'X is on the move', 'O is on the move']
+    $status.text(status[nowPlaying])
+  }
+}
+
 const send = (state) => {
   socket.emit('update', state)
 }
 
-// Subscribe
-tictac.subscribe(render($('#board')))
-tictac.subscribe(send, ['INIT', 'MOVE', 'JOIN', 'START'])
+
 
 const startGame = (room) => {
-  tictac.init()
+  tictac.init(room)
 
   // Update general UI
   $('#game').show()
@@ -52,26 +56,25 @@ const startGame = (room) => {
   })
 
   socket.on('update', state => {
-    console.log('dolazi emit', state, room)
-    // render($('#board'))(state)
     tictac.update(state)
   })
 
   socket.on('joined', state => {
-    console.warn('joined')
     player = 1
     tictac.start()
   })
-}
 
-const startRoom = (room) => {
-  tictac.join(room)
-  startGame(room)
   socket.emit('join', room)
 }
 
-startRoom(1234)
+// Subscribes
+// Game rendering
+tictac.subscribe(render($('#board')))
 
-// $('.startBtn').on('click', () => {
-//   startRoom()
-// })
+// Action sending
+tictac.subscribe(send, ['INIT', 'MOVE', 'JOIN', 'START'])
+
+// Status rendering
+tictac.subscribe(renderStatus($('#status')))
+
+startGame(1234)
