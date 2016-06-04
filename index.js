@@ -11,7 +11,9 @@ const tictac = game({ size: 3 })
 let player = 2
 
 // Socket
-let socket = io('http://localhost:3000');
+let socket = io('http://localhost:3000')
+
+const $joinRoom = $('#join-room')
 
 // Render boxes
 const render = ($board) => {
@@ -66,10 +68,11 @@ const startGame = (room) => {
   // Join the room at server
   socket.emit('join', room)
   window.location.hash = room
+  $joinRoom.val(room)
 }
 
 // Joining room
-$('#join-room').on('keyup', (e) => {
+$joinRoom.on('keyup', (e) => {
   const roomNo = $(e.target).val()
   if(_.inRange(roomNo, roomNoMin, roomNoMax)){
     startGame(roomNo)
