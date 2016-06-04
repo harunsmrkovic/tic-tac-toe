@@ -4,10 +4,6 @@ body {
   color: #fff;
 }
 
-#game {
-  display: none;
-}
-
 #board {
   margin: 50px auto;
   width: 600px;
@@ -93,4 +89,32 @@ body {
 }
 
 #scoreboard .player-o {
+}
+
+#join {
+  margin: 10px auto;
+  width: 160px;
+}
+
+#join input {
+  background-color: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  padding: 10px;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 8px;
+  text-align: center;
+
+  transition: .2s background-color;
+}
+
+#join input:focus {
+  outline: none;
+}
+
+#join input:hover {
+  background-color: rgba(255,255,255,0.3);
 }
