@@ -9,8 +9,11 @@ const game = () => {
   }
 
   let subscribers = []
-  const subscribe = (callback) => {
-    subscribers.push({ callback })
+  const subscribe = (callback, actions = []) => {
+    subscribers.push({
+      callback,
+      actions
+    })
   }
 
   const dispatch = (action) => {
@@ -20,7 +23,9 @@ const game = () => {
 
   const notify = (action, state) => {
     _.each(subscribers, subscriber => {
-      subscriber.callback(action, state)
+      if(!subscriber.actions.length || subscriber.actions.includes(action.type)){
+        subscriber.callback(action, state)
+      }
     })
     return true
   }
