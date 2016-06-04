@@ -45,7 +45,7 @@ const send = (state) => {
 
 
 const startGame = (room) => {
-  tictac.dispatch({ type: 'START', room: room })
+  tictac.dispatch({ type: 'INIT', room: room })
 
   // Update general UI
   $('#game').show()
@@ -61,7 +61,7 @@ const startGame = (room) => {
 
   socket.on('joined', state => {
     player = 1
-    tictac.dispatch({ type: 'start' })
+    tictac.dispatch({ type: 'START' })
   })
 
   socket.emit('join', room)

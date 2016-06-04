@@ -28,7 +28,6 @@ const game = ({ size }) => {
         return cp(state, { board: initBoard(size), room: action.room })
       case 'START':
         return cp(state, { nowPlaying: 1 })
-        break
       case 'MOVE':
         // Can't move if it's not user's turn to play
         if (action.player !== state.nowPlaying) return state
