@@ -1,4 +1,5 @@
 import doMove from './move'
+import didWon from './won'
 import initBoard from './initBoard'
 
 const mutate = (action, state) => {

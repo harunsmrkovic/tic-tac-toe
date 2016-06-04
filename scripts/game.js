@@ -1,4 +1,3 @@
-import didWon from './won'
 import mutate from './mutate'
 
 const game = () => {
