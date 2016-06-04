@@ -45,23 +45,23 @@ const send = (state) => {
 
 
 const startGame = (room) => {
-  tictac.init(room)
+  tictac.dispatch({ type: 'START', room: room })
 
   // Update general UI
   $('#game').show()
   $('#start').hide()
 
   $('#board .box').on('click', function(){
-    tictac.move($(this).attr('data-x'), $(this).attr('data-y'), player)
+    tictac.dispatch({ type: 'MOVE', x: $(this).attr('data-x'), y: $(this).attr('data-y'), player: player })
   })
 
-  socket.on('update', state => {
-    tictac.update(state)
+  socket.on('update', update => {
+    tictac.dispatch(update)
   })
 
   socket.on('joined', state => {
     player = 1
-    tictac.start()
+    tictac.dispatch({ type: 'start' })
   })
 
   socket.emit('join', room)

@@ -34,9 +34,9 @@ const game = ({ size }) => {
         if (action.player !== state.nowPlaying) return state
 
         // Can't play already played field
-        if (state.board[x][y] > 0) return state
+        if (state.board[action.x][action.y] > 0) return state
 
-        const board = doMove(state.board, x, y, state.nowPlaying)
+        const board = doMove(state.board, action.x, action.y, state.nowPlaying)
         return cp(state, {
             board,
             won: didWon({ board }),
