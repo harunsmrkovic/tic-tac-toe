@@ -36,7 +36,7 @@ const render = ($board) => {
 }
 
 const renderStatus = ($status) => {
-  return (action, { nowPlaying, won }) => {
+  return (action, { nowPlaying, won, scores }) => {
     // Update colors
     $status.find('.player > .mark').addClass('inactive')
     if(nowPlaying){
@@ -51,6 +51,12 @@ const renderStatus = ($status) => {
       })
     } else {
       $('.box .line').hide()
+    }
+
+    // Updates the scoardboard
+    if(scores) {
+      $status.find('.player-x > .score').text(scores.x)
+      $status.find('.player-o > .score').text(scores.o)
     }
   }
 }
@@ -125,7 +131,9 @@ const findWinningCoordinates = (won) => {
 }
 
 const nextGame = (action, state) => {
-  if(state.won && player == 1) {
+  const { won } = state
+  if(won && player == 1 && action.type !== 'INCREASE_SCORE') {
+    tictac.dispatch({ type: 'INCREASE_SCORE', winner: won.winner })
     setTimeout(() => {
       tictac.dispatch({ type: 'INIT', size: 3 })
     }, 5000)

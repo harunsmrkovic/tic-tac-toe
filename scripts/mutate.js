@@ -30,6 +30,12 @@ const mutate = (action, state) => {
           nowPlaying: 1 + Math.abs(state.nowPlaying-2)
         }
       )
+    case 'INCREASE_SCORE':
+      const x = state.scores && state.scores.x ? state.scores.x : 0
+      const o = state.scores && state.scores.o ? state.scores.o : 0
+      return cp(state, {
+        scores: { x: (state.won.winner === 1) ? x+1 : x, o: (state.won.winner === 2) ? o+1 : o }
+      })
     default:
       return state
   }
