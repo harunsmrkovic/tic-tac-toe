@@ -44,7 +44,8 @@ const send = (state) => {
 }
 
 const startGame = (room) => {
-  tictac.dispatch({ type: 'INIT', room })
+  // Initiate game
+  tictac.dispatch({ type: 'INIT', room: room, size: 3 })
 
   // Add event listener for playing
   $('#board .box').on('click', function(){
