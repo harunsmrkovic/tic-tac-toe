@@ -30,9 +30,14 @@ const game = () => {
     return true
   }
 
+  const getState = (child = false) => {
+    return (child) ? state[child] : state
+  }
+
   return {
     dispatch,
-    subscribe
+    subscribe,
+    getState
   }
 }
 

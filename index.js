@@ -74,7 +74,9 @@ const startGame = (room) => {
 
   // Add event listener for playing
   $('#board .box').on('click', function(){
-    tictac.dispatch({ type: 'MOVE', x: $(this).attr('data-x'), y: $(this).attr('data-y'), player })
+    if(!tictac.getState('won')){
+      tictac.dispatch({ type: 'MOVE', x: $(this).attr('data-x'), y: $(this).attr('data-y'), player })
+    }
   })
 
   // Dispatching actions from other players
