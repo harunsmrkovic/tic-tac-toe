@@ -134,6 +134,10 @@ body {
 #scoreboard .player-o {
 }
 
+#scoreboard .player.me .mark {
+  border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+}
+
 #join {
   margin: 10px auto;
   width: 160px;

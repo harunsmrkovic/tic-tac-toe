@@ -140,6 +140,12 @@ const nextGame = (action, state) => {
   }
 }
 
+const markMe = ($status) => {
+  return () => {
+    $status.find(`.player[data-player="${player}"]`).addClass('me')
+  }
+}
+
 // Game rendering
 tictac.subscribe(render($('#board')))
 
@@ -154,6 +160,9 @@ tictac.subscribe(nextGame, ['MOVE'])
 
 // Scoreboard increaser
 tictac.subscribe(increaseScore($('#scoreboard')), ['INCREASE_SCORE'])
+
+// Set current user border
+tictac.subscribe(markMe($('#scoreboard')), ['START'])
 
 // Start game at random room
 const hashRoom = window.location.hash && window.location.hash.substr(1)
