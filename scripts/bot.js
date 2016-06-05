@@ -25,7 +25,7 @@ function didWin(state, symbol) {
 	}
 
 	for(var i = 0; i < 3; i++) {
-		if(state[3 * i] === symbol && state[3 * i + 1] === symbol && state[3 * i + 2] === symbol) {
+		if(state[3 * i + 0] === symbol && state[3 * i + 1] === symbol && state[3 * i + 2] === symbol) {
 			return true;
 		}
 	}
@@ -78,9 +78,9 @@ function printBoard(state, depth) {
 
 // x = 1, o = 2, empty = 0
 function mmVal(state, currPlayer, depth) {
-	// printBoard(state, depth);
+	// // printBoard(state, depth);
 
-	var isMax = (currPlayer === 1);
+	var isMax = (currPlayer == 1);
 	var emptyFields = findAllIndices(state, 0);
 
 	if(isOver(state)) {
@@ -99,20 +99,8 @@ function mmVal(state, currPlayer, depth) {
 			mmVals.push(mmVal(new_state, (currPlayer == 1) ? 2 : 1, depth + 1));
 		}
 
-		// console.log(new_state);
-		// console.log(mmVals);
-		// console.log();
-
 		var minmax = isMax ? _.max(mmVals) : _.min(mmVals);
 		
-		// var pr = '';
-		// for(var i = 0; i < depth; i++) {
-		// 	pr += '\t';
-		// }
-		// pr += minmax;
-		// pr += '\n\n';
-		// console.log(pr);
-
 		return minmax;
 	}		
 }
@@ -131,13 +119,21 @@ function nextMove(state, currPlayer) {
 		mmVals.push({ ind: emptyFields[i], val: mmVal(new_state, currPlayer, 0) });
 	}
 
-	return isMax ? _.maxBy(mmVals, (val) => { return val.ind }).ind : _.minBy(mmVals, (val) => { return val.ind }).ind;
+	console.log(mmVals);	
+
+	return isMax ? _.maxBy(mmVals, (val) => { return val.val }).ind : _.minBy(mmVals, (val) => { return val.val }).ind;
 }
 
-// var state = [2, 2, 0, 1, 1, 2, 1, 0, 0];
-// var player = 2;
+var state = [1, 2, 0, 0, 1, 1, 0, 0, 2];
+var player = 2;
 
-// mmVal(state, 1);
+// console.log(
+// 	mmVal(state, player, 0)
+// );
+
+console.log(
+	nextMove(state, player)
+);
 
 // console.log(isOver([2, 2, 1, 1, 1, 2, 1, 0, 0]))
 
@@ -156,66 +152,66 @@ function nextMove(state, currPlayer) {
 // 	printBoard(state, 0);
 // }
 
-// ==== sockets ====
+// // ==== sockets ====
 
-const roomNoMin = 1000
-const roomNoMax = 9999
+// const roomNoMin = 1000
+// const roomNoMax = 9999
 
-// Initialize the game
-const tictac = game({ size: 3 })
-let player = 2
+// // Initialize the game
+// const tictac = game({ size: 3 })
+// let player = 2
 
-// Socket
-let socket = io('http://localhost:3000')
+// // Socket
+// let socket = io('http://localhost:3000')
 
-// When the socket sends an update
-const send = (action, state) => {
-	if(!action.fromSocket) {
-		socket.emit('update', cp(action, { room: state.room }))
-	}
-}
+// // When the socket sends an update
+// const send = (action, state) => {
+// 	if(!action.fromSocket) {
+// 		socket.emit('update', cp(action, { room: state.room }))
+// 	}
+// }
 
-// Action sending
-tictac.subscribe(send, ['MOVE', 'START'])
+// // Action sending
+// tictac.subscribe(send, ['MOVE', 'START'])
 
-const startGame = (room) => {
-  // Initiate game
-  tictac.dispatch({ type: 'INIT', room: room, size: 3 })
+// const startGame = (room) => {
+//   // Initiate game
+//   tictac.dispatch({ type: 'INIT', room: room, size: 3 })
 
-  // Dispatching actions from other players
-  socket.on('update', update => {
-    tictac.dispatch(cp(update, { fromSocket: true }))
+//   // Dispatching actions from other players
+//   socket.on('update', update => {
+//     tictac.dispatch(cp(update, { fromSocket: true }))
 
-    console.log(tictac.getState());
+//     console.log(tictac.getState());
 
-	var move = nextMove(_.flattenDeep(tictac.getState().board), 2);
+// 	var move = nextMove(_.flattenDeep(tictac.getState().board), 2);
 
-	var move_x = Math.floor(move / 3);
-	var move_y = move - Math.floor(move / 3) * 3;
+// 	var move_x = Math.floor(move / 3);
+// 	var move_y = move - Math.floor(move / 3) * 3;
 
-	console.log('move: ' + move);
-	console.log('x: ' + move_x);
-	console.log('y: ' + move_y);
+// 	console.log('move: ' + move);
+// 	console.log('x: ' + move_x);
+// 	console.log('y: ' + move_y);
 
-	tictac.dispatch({ type: 'MOVE', x: move_x, y: move_y, player });
-  })
+// 	tictac.dispatch({ type: 'MOVE', x: move_x, y: move_y, player });
+//   })
 
-  // Wait for other players to join
-  socket.on('joined', state => {
-    player = 1
-    tictac.dispatch({ type: 'START' })
-  })
+//   // Wait for other players to join
+//   socket.on('joined', state => {
+//     player = 1
+//     tictac.dispatch({ type: 'START' })
+//   })
 
-  // Join the room at server
-  socket.emit('join', room)
-}
+//   // Join the room at server
+//   socket.emit('join', room)
+// }
 
-const checkGameWon = (action, state) => {
-  const { won } = state
-  if(won) {
-    if(won.player) tictac.dispatch({ type: 'INCREASE_SCORE', winner: won.player })
-    wait(() => {tictac.dispatch({ type: 'INIT', size: 3 })}, 2500)
-  }
-}
+// const checkGameWon = (action, state) => {
+//   const { won } = state
+//   if(won) {
+//     if(won.player) tictac.dispatch({ type: 'INCREASE_SCORE', winner: won.player })
+//     wait(() => {tictac.dispatch({ type: 'INIT', size: 3 })}, 2500)
+//   }
+// }
 
-startGame(501);
+// startGame(501);
