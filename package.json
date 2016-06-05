@@ -7,8 +7,10 @@
     "start": "webpack-dev-server --progress --colors --port 8888",
     "test": "mocha --compilers js:babel-register --no-colors",
     "test watch": "mocha --compilers js:babel-register --no-colors --watch",
-    "sockets": "babel socket.js --out-file socket-compiled.js && node socket-compiled.js"
-  },
+    "compile" : "babel ./scripts/game.js --out-file ./scripts/game-compiled.js && babel ./scripts/helpers.js --out-file ./scripts/helpers-compiled.js && babel ./scripts/initboard.js --out-file ./scripts/initboard-compiled.js && babel ./scripts/move.js --out-file ./scripts/move-compiled.js && babel ./scripts/mutate.js --out-file ./scripts/mutate-compiled.js && babel ./scripts/won.js --out-file ./scripts/won-compiled.js",
+    "sockets": "babel socket.js --out-file socket-compiled.js && node socket-compiled.js",
+    "bot" : "babel ./scripts/bot.js --out-file ./scripts/bot-compiled.js && node ./scripts/bot-compiled.js"
+  },  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/harunsmrkovic/tic-tac-toe.git"

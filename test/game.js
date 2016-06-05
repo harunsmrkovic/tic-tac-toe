@@ -1,4 +1,4 @@
-import game from '../scripts/game'
+import game from '../scripts/game-compiled'
 
 import { assert } from 'chai'
 

@@ -1,14 +1,8 @@
-// import _ from 'lodash'
-// import game from './game'
-// import $ from 'jquery'
-// import io from 'socket.io-client'
-// import { cp, wait } from './helpers'
-
-var _ = require('lodash')
-var game = require('./game')
-var $ = require('jquery')
-var io = require('socket.io-client')
-var { cp, wait } = require('./helpers')
+import _ from 'lodash'
+import game from './game-compiled'
+import $ from 'jquery'
+import io from 'socket.io-client'
+import { cp, wait } from './helpers-compiled'
 
 function findAllIndices(arr, val) {
 	var inds = [];
@@ -22,11 +16,11 @@ function findAllIndices(arr, val) {
 }
 
 function didWin(state, symbol) {
-	if(state[0] === symbol && state[5] === symbol && state[8] === symbol) {
+	if(state[0] === symbol && state[4] === symbol && state[8] === symbol) {
 		return true;
 	}
 
-	if(state[2] === symbol && state[5] === symbol && state[6] === symbol) {
+	if(state[2] === symbol && state[4] === symbol && state[6] === symbol) {
 		return true;
 	}
 
@@ -44,6 +38,7 @@ function didWin(state, symbol) {
 
 	return false;
 }
+
 
 function didXWin(state) {
 	return didWin(state, 1);
@@ -86,47 +81,71 @@ function mmVal(state, currPlayer, depth) {
 	// printBoard(state, depth);
 
 	var isMax = (currPlayer === 1);
-	var emptyFileds = findAllIndices(state, 0);
+	var emptyFields = findAllIndices(state, 0);
 
 	if(isOver(state)) {
 		// 0 = draw case
+		// console.log('over: ');
+		// console.log(state);
 		return didXWin(state) ? 1 : (didOWin(state) ? -1 : 0);
 	} else {	
 		var mmVals = [];
 
-		for(var i = 0; i < emptyFileds.length; i++) {
-			var value = emptyFileds[i];
+		for(var i = 0; i < emptyFields.length; i++) {
+			var value = emptyFields[i];
 			var new_state = _.cloneDeep(state);
 			
 			new_state[value] = currPlayer;
 			mmVals.push(mmVal(new_state, (currPlayer == 1) ? 2 : 1, depth + 1));
 		}
 
-		// console.log('================');
+		// console.log(new_state);
+		// console.log(mmVals);
+		// console.log();
 
-		return isMax ? _.max(mmVals) : _.min(mmVals);
+		var minmax = isMax ? _.max(mmVals) : _.min(mmVals);
+		
+		// var pr = '';
+		// for(var i = 0; i < depth; i++) {
+		// 	pr += '\t';
+		// }
+		// pr += minmax;
+		// pr += '\n\n';
+		// console.log(pr);
+
+		return minmax;
 	}		
 }
  
 function nextMove(state, currPlayer) {
-	var emptyFileds = findAllIndices(state, 0);
+	var emptyFields = findAllIndices(state, 0);
 
 	var isMax = (currPlayer == 1);
 	var mmVals = [];
 
-	for(var i = 0; i < emptyFileds.length; i++) {
-		var value = emptyFileds[i];
+	for(var i = 0; i < emptyFields.length; i++) {
+		var value = emptyFields[i];
 		var new_state = _.cloneDeep(state);
 		
 		new_state[value] = currPlayer;
-		mmVals.push({ ind: emptyFileds[i], val: mmVal(new_state, currPlayer, 0) });
+		mmVals.push({ ind: emptyFields[i], val: mmVal(new_state, currPlayer, 0) });
 	}
 
 	return isMax ? _.maxBy(mmVals, (val) => { return val.ind }).ind : _.minBy(mmVals, (val) => { return val.ind }).ind;
 }
 
-// var state = [0, 0, 0, 0, 0, 0, 0, 0];
-// var player = 1;
+// var state = [2, 2, 0, 1, 1, 2, 1, 0, 0];
+// var player = 2;
+
+// mmVal(state, 1);
+
+// console.log(isOver([2, 2, 1, 1, 1, 2, 1, 0, 0]))
+
+// printBoard(state, 0);
+
+// console.log(
+// 	nextMove(state, player)
+// );
 
 // for(var i = 0; i < 8; i++) {
 // 	var move = nextMove(state, player);
@@ -156,6 +175,9 @@ const send = (action, state) => {
 	}
 }
 
+// Action sending
+tictac.subscribe(send, ['MOVE', 'START'])
+
 const startGame = (room) => {
   // Initiate game
   tictac.dispatch({ type: 'INIT', room: room, size: 3 })
@@ -163,7 +185,19 @@ const startGame = (room) => {
   // Dispatching actions from other players
   socket.on('update', update => {
     tictac.dispatch(cp(update, { fromSocket: true }))
-	tictac.dispatch({ type: 'MOVE', x: 0, y: 0, player })
+
+    console.log(tictac.getState());
+
+	var move = nextMove(_.flattenDeep(tictac.getState().board), 2);
+
+	var move_x = Math.floor(move / 3);
+	var move_y = move - Math.floor(move / 3) * 3;
+
+	console.log('move: ' + move);
+	console.log('x: ' + move_x);
+	console.log('y: ' + move_y);
+
+	tictac.dispatch({ type: 'MOVE', x: move_x, y: move_y, player });
   })
 
   // Wait for other players to join

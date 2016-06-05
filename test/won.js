@@ -1,4 +1,4 @@
-import won from '../scripts/won'
+import won from '../scripts/won-compiled'
 
 import { assert } from 'chai'
 

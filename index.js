@@ -28,6 +28,8 @@ const send = (action, state) => {
 }
 
 const startGame = (room) => {
+  console.log('starting game...');
+  
   // Initiate game
   tictac.dispatch({ type: 'INIT', room: room, size: 3 })
 
@@ -40,6 +42,7 @@ const startGame = (room) => {
 
   // Dispatching actions from other players
   socket.on('update', update => {
+    console.log(update);
     tictac.dispatch(cp(update, { fromSocket: true }))
   })
 
