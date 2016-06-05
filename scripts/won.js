@@ -52,7 +52,6 @@ const won = ({ board }) => {
     })
   }
 
-  console.log(!winner, board, !board.filter((row) => row.includes(0)).length)
   if(!winner && !board.filter((row) => row.includes(0)).length) {
     return { player: false }
   }
