@@ -8,9 +8,12 @@ import config from './config'
 const { socket, room } = config
 
 import game from './scripts/game'
+
 import renderBoard from './scripts/board-view'
 import renderStatus from './scripts/status-view'
 import renderScore from './scripts/score-view'
+
+import wonCheck from './scripts/hooks/won-check'
 
 // Socket Connection
 const ws = io(socket.url)
@@ -34,19 +37,18 @@ $('#board').on('click', '.box', (e) => {
 })
 
 // Join listeners
-ws.on('joined', () => {
-  dispatch({ type: 'START' })
-})
+ws.on('joined', () => { dispatch({ type: 'START' }) })
 
 // Move listeners
-ws.on('update', (move) => {
-  dispatch(move)
-})
+ws.on('update', dispatch)
 
 // Rendering
 subscribe(renderBoard($board))
 subscribe(renderStatus($scoreboard))
-subscribe(renderScore($scoreboard))
+subscribe(renderScore($scoreboard), ['INCREASE_SCORE'])
+
+// Hooks
+subscribe(wonCheck, ['MOVE'])
 
 // Initialize the game
 const startGame = (room) => {

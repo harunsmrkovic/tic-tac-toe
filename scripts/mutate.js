@@ -7,7 +7,7 @@ const mutate = (action, state) => {
   switch(action.type) {
     case 'INIT':
       return cp(state, {
-        board: initBoard(action.size),
+        board: initBoard(action.size || 3),
         room: action.room ? action.room : state.room,
         won: false
       })

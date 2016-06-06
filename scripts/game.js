@@ -26,7 +26,7 @@ const game = () => {
   const notify = (action, state) => {
     _.each(subscribers, subscriber => {
       if(!subscriber.actions.length || subscriber.actions.includes(action.type)){
-        subscriber.callback(action, state)
+        subscriber.callback(action, state, dispatch)
       }
     })
     return true
