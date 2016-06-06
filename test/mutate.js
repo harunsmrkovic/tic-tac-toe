@@ -108,4 +108,18 @@ describe('Mutation check', function() {
     )
   })
 
+  it('should not allow a move if someone has won', function() {
+    assert.deepEqual(
+      mutate(
+        { type: 'MOVE', x: 0, y: 2, player: 2 },
+        { board: [[1,1,0],[0,0,0],[0,0,0]], nowPlaying: 2, won: { player: 1 } }
+      ),
+      {
+        board: [[1,1,0],[0,0,0],[0,0,0]],
+        nowPlaying: 2,
+        won: { player: 1 }
+      }
+    )
+  })
+
 })
