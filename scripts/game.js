@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import mutate from './mutate-compiled'
+import mutate from './mutate'
 
 const game = () => {
 

@@ -1,8 +1,8 @@
 import _ from 'lodash'
-import game from './game-compiled'
+import game from './game'
 import $ from 'jquery'
 import io from 'socket.io-client'
-import { cp, wait } from './helpers-compiled'
+import { cp, wait } from './helpers'
 
 function findAllIndices(arr, val) {
 	var inds = [];
@@ -88,23 +88,23 @@ function mmVal(state, currPlayer, depth) {
 		// console.log('over: ');
 		// console.log(state);
 		return didXWin(state) ? 1 : (didOWin(state) ? -1 : 0);
-	} else {	
+	} else {
 		var mmVals = [];
 
 		for(var i = 0; i < emptyFields.length; i++) {
 			var value = emptyFields[i];
 			var new_state = _.cloneDeep(state);
-			
+
 			new_state[value] = currPlayer;
 			mmVals.push(mmVal(new_state, (currPlayer == 1) ? 2 : 1, depth + 1));
 		}
 
 		var minmax = isMax ? _.max(mmVals) : _.min(mmVals);
-		
+
 		return minmax;
-	}		
+	}
 }
- 
+
 function nextMove(state, currPlayer) {
 	var emptyFields = findAllIndices(state, 0);
 
@@ -114,12 +114,12 @@ function nextMove(state, currPlayer) {
 	for(var i = 0; i < emptyFields.length; i++) {
 		var value = emptyFields[i];
 		var new_state = _.cloneDeep(state);
-		
+
 		new_state[value] = currPlayer;
 		mmVals.push({ ind: emptyFields[i], val: mmVal(new_state, currPlayer, 0) });
 	}
 
-	console.log(mmVals);	
+	console.log(mmVals);
 
 	return isMax ? _.maxBy(mmVals, (val) => { return val.val }).ind : _.minBy(mmVals, (val) => { return val.val }).ind;
 }
