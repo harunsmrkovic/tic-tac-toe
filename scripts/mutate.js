@@ -1,7 +1,7 @@
-import doMove from './move-compiled'
-import didWon from './won-compiled'
-import initBoard from './initboard-compiled'
-import { cp } from './helpers-compiled'
+import doMove from './move'
+import didWon from './won'
+import initBoard from './initboard'
+import { cp } from './helpers'
 
 const mutate = (action, state) => {
   switch(action.type) {
