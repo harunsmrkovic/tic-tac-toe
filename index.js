@@ -1,109 +1,60 @@
-import game from './scripts/game'
 import _ from 'lodash'
 import $ from 'jquery'
 import io from 'socket.io-client'
+
 import { cp, wait } from './scripts/helpers'
+
+import config from './config'
+const { socket, room } = config
+
+import game from './scripts/game'
 
 import renderBoard from './scripts/board-view'
 import renderStatus from './scripts/status-view'
 import renderScore from './scripts/score-view'
 
-const roomNoMin = 1000
-const roomNoMax = 9999
+import wonCheck from './scripts/hooks/won-check'
 
-// Initialize the game
-const tictac = game({ size: 3 })
-let player = 2
+// Socket Connection
+const ws = io(socket.url)
 
-// Socket
-let socket = io('http://localhost:3000')
+// DOM consts
+const $board = $('#board')
+const $scoreboard = $('#scoreboard')
 
-const $joinRoom = $('#join-room')
+// Load game
+const { dispatch, subscribe, getState } = game()
 
-// When the socket sends an update
-const send = (action, state) => {
-  if(!action.fromSocket) {
-    socket.emit('update', cp(action, { room: state.room }))
-  }
-}
-
-const startGame = (room) => {
-  console.log('starting game...');
-  
-  // Initiate game
-  tictac.dispatch({ type: 'INIT', room: room, size: 3 })
-
-  // Add event listener for playing
-  $('#board .box').on('click', function(){
-    if(!tictac.getState('won')){
-      tictac.dispatch({ type: 'MOVE', x: $(this).attr('data-x'), y: $(this).attr('data-y'), player })
-    }
-  })
-
-  // Dispatching actions from other players
-  socket.on('update', update => {
-    console.log(update);
-    tictac.dispatch(cp(update, { fromSocket: true }))
-  })
-
-  // Wait for other players to join
-  socket.on('joined', state => {
-    player = 1
-    tictac.dispatch({ type: 'START' })
-  })
-
-  // Join the room at server
-  socket.emit('join', room)
-  window.location.hash = room
-  $joinRoom.val(room)
-}
-
-// Joining room
-$joinRoom.on('keyup', (e) => {
-  const roomNo = $(e.target).val()
-  if(_.inRange(roomNo, roomNoMin, roomNoMax)){
-    startGame(roomNo)
+// UI
+$('#board').on('click', '.box', (e) => {
+  const { room, player, won } = getState()
+  if(!won){
+    const box = $(e.target)
+    const action = { type: 'MOVE', x: box.attr('data-x'), y: box.attr('data-y'), player, room }
+    dispatch(action)
+    ws.emit('update', action)
   }
 })
 
-const markMe = ($status) => {
-  return () => {
-    $status.find(`.player[data-player="${player}"]`).addClass('me')
-  }
+// Join listeners
+ws.on('joined', () => { dispatch({ type: 'START' }) })
+
+// Move listeners
+ws.on('update', dispatch)
+
+// Rendering
+subscribe(renderBoard($board))
+subscribe(renderStatus($scoreboard))
+subscribe(renderScore($scoreboard), ['INCREASE_SCORE'])
+
+// Hooks
+subscribe(wonCheck, ['MOVE'])
+
+// Initialize the game
+const startGame = (room) => {
+  if(!room || isNaN(room)) room = _.random(roomNoMin, roomNoMax)
+  dispatch({ type: 'INIT', size: 3, room })
+  ws.emit('join', room)
 }
 
-const checkGameWon = (action, state) => {
-  const { won } = state
-  if(won) {
-    if(won.player) tictac.dispatch({ type: 'INCREASE_SCORE', winner: won.player })
-    wait(() => {tictac.dispatch({ type: 'INIT', size: 3 })}, 2500)
-  }
-}
-
-// Game rendering
-tictac.subscribe(renderBoard($('#board')))
-
-// Status rendering
-tictac.subscribe(renderStatus($('#scoreboard')))
-
-// Action sending
-tictac.subscribe(send, ['MOVE', 'START'])
-
-// Winner checker
-tictac.subscribe(checkGameWon, ['MOVE'])
-
-// Scoreboard increaser
-tictac.subscribe(renderScore($('#scoreboard')), ['INCREASE_SCORE'])
-
-// Set current user border
-tictac.subscribe(markMe($('#scoreboard')), ['START'])
-
-// Start game at random room
-const initGame = ((hashRoom) => {
-  if(hashRoom && !isNaN(hashRoom)){
-    startGame(hashRoom)
-  }
-  else {
-    startGame(_.random(roomNoMin, roomNoMax))
-  }
-})(window.location.hash && window.location.hash.substr(1))
+startGame(window.location.hash && window.location.hash.substr(1))

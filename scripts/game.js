@@ -4,9 +4,10 @@ import mutate from './mutate-compiled'
 const game = () => {
 
   let state = {
-    nowPlaying: 0,
+    nowPlaying: 2,
     board: [],
-    won: false
+    won: false,
+    player: 1
   }
 
   let subscribers = []
@@ -18,6 +19,7 @@ const game = () => {
   }
 
   const dispatch = (action) => {
+    console.info('Dispatching', JSON.stringify(action, null, 2))
     state = mutate(action, state)
     notify(action, state)
   }
@@ -25,7 +27,7 @@ const game = () => {
   const notify = (action, state) => {
     _.each(subscribers, subscriber => {
       if(!subscriber.actions.length || subscriber.actions.includes(action.type)){
-        subscriber.callback(action, state)
+        subscriber.callback(action, state, dispatch)
       }
     })
     return true

@@ -7,13 +7,13 @@ const mutate = (action, state) => {
   switch(action.type) {
     case 'INIT':
       return cp(state, {
-        board: initBoard(action.size),
+        board: initBoard(action.size || 3),
         room: action.room ? action.room : state.room,
         won: false
       })
     case 'START':
       return cp(state, {
-        nowPlaying: 1
+        player: 2
       })
     case 'MOVE':
       // Can't move if it's not user's turn to play
