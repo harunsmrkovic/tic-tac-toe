@@ -22,6 +22,9 @@ const mutate = (action, state) => {
       // Can't play already played field
       if (state.board[action.x][action.y] > 0) return state
 
+      // Can't play if someone won
+      if(state.won) return state
+
       const board = doMove(state.board, action.x, action.y, state.nowPlaying)
 
       return cp(state, {
