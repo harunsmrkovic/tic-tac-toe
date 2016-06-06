@@ -23,7 +23,8 @@ describe('Mutation check', function() {
       {
         room: 1337,
         board: [[0,0,0],[0,0,0],[0,0,0]],
-        won: false
+        won: false,
+        blockedIncrease: false
       }
     )
   })

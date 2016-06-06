@@ -9,7 +9,8 @@ const mutate = (action, state) => {
       return cp(state, {
         board: initBoard(action.size || 3),
         room: action.room ? action.room : state.room,
-        won: false
+        won: false,
+        blockedIncrease: false
       })
     case 'START':
       return cp(state, {
@@ -36,8 +37,12 @@ const mutate = (action, state) => {
     case 'INCREASE_SCORE':
       const x = state.scores && state.scores[1] ? state.scores[1] : 0
       const o = state.scores && state.scores[2] ? state.scores[2] : 0
+
+      if(state.blockedIncrease) return state
+
       return cp(state, {
-        scores: { 1: (state.won.player === 1) ? x+1 : x, 2: (state.won.player === 2) ? o+1 : o }
+        scores: { 1: (state.won.player === 1) ? x+1 : x, 2: (state.won.player === 2) ? o+1 : o },
+        blockedIncrease: true
       })
     default:
       return state
