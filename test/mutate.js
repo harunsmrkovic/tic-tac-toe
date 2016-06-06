@@ -36,7 +36,8 @@ describe('Mutation check', function() {
       ),
       {
         board: [[0,0,0],[0,0,0],[0,0,0]],
-        nowPlaying: 1
+        nowPlaying: 1,
+        player: 1
       }
     )
   })
@@ -44,13 +45,14 @@ describe('Mutation check', function() {
   it('should play a move by the X player', function() {
     assert.deepEqual(
       mutate(
-        { type: 'MOVE', x: 0, y: 0, player: 1 },
-        { board: [[0,0,0],[0,0,0],[0,0,0]], nowPlaying: 1 }
+        { type: 'MOVE', x: 0, y: 0 },
+        { board: [[0,0,0],[0,0,0],[0,0,0]], nowPlaying: 1, player: 1 }
       ),
       {
         board: [[1,0,0],[0,0,0],[0,0,0]],
         nowPlaying: 2,
-        won: false
+        won: false,
+        player: 1
       }
     )
   })
@@ -58,13 +60,14 @@ describe('Mutation check', function() {
   it('should play a move by the O player', function() {
     assert.deepEqual(
       mutate(
-        { type: 'MOVE', x: 0, y: 2, player: 2 },
-        { board: [[1,1,0],[0,0,0],[0,0,0]], nowPlaying: 2 }
+        { type: 'MOVE', x: 0, y: 2 },
+        { board: [[1,1,0],[0,0,0],[0,0,0]], nowPlaying: 2, player: 2 }
       ),
       {
         board: [[1,1,2],[0,0,0],[0,0,0]],
         nowPlaying: 1,
-        won: false
+        won: false,
+        player: 2
       }
     )
   })
@@ -72,12 +75,13 @@ describe('Mutation check', function() {
   it('should return the same board if the same move is played', function() {
     assert.deepEqual(
       mutate(
-        { type: 'MOVE', x: 0, y: 0, player: 1 },
-        { board: [[1,0,0],[0,0,0],[0,0,0]], nowPlaying: 1 }
+        { type: 'MOVE', x: 0, y: 0 },
+        { board: [[1,0,0],[0,0,0],[0,0,0]], nowPlaying: 1, player: 1 }
       ),
       {
         board: [[1,0,0],[0,0,0],[0,0,0]],
-        nowPlaying: 1
+        nowPlaying: 1,
+        player: 1
       }
     )
   })
@@ -85,12 +89,13 @@ describe('Mutation check', function() {
   it('should return the same board if the it\'s not the player\'s turn to play', function() {
     assert.deepEqual(
       mutate(
-        { type: 'MOVE', x: 0, y: 0, player: 1 },
-        { board: [[0,0,0],[0,0,0],[0,0,0]], nowPlaying: 2 }
+        { type: 'MOVE', x: 0, y: 0 },
+        { board: [[0,0,0],[0,0,0],[0,0,0]], nowPlaying: 2, player: 1 }
       ),
       {
         board: [[0,0,0],[0,0,0],[0,0,0]],
-        nowPlaying: 2
+        nowPlaying: 2,
+        player: 1
       }
     )
   })
@@ -98,8 +103,8 @@ describe('Mutation check', function() {
   it('should return won object if the player X wins', function() {
     assert.deepEqual(
       mutate(
-        { type: 'MOVE', x: 2, y: 2, player: 1 },
-        { board: [[1, 0, 0],[0, 1, 0],[0, 0, 0]], nowPlaying: 1 }
+        { type: 'MOVE', x: 2, y: 2 },
+        { board: [[1, 0, 0],[0, 1, 0],[0, 0, 0]], nowPlaying: 1, player: 1 }
       ).won,
       {
         place: 'diagonal1',
