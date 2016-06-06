@@ -1,4 +1,4 @@
-import move from '../scripts/move-compiled'
+import move from '../scripts/move'
 
 import { assert } from 'chai'
 

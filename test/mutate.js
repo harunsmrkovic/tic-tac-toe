@@ -1,4 +1,4 @@
-import mutate from '../scripts/mutate-compiled'
+import mutate from '../scripts/mutate'
 
 import { assert } from 'chai'
 
