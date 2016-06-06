@@ -15,15 +15,22 @@ import renderScore from './scripts/score-view'
 // Socket Connection
 const ws = io(socket.url)
 
+// DOM consts
+const $board = $('#board')
+const $scoreboard = $('#scoreboard')
+
 // Load game
 const { dispatch, subscribe, getState } = game()
 
 // UI
 $('#board').on('click', '.box', (e) => {
-  const box = $(e.target)
-  const action = { type: 'MOVE', x: box.attr('data-x'), y: box.attr('data-y'), player: getState('player'), room: getState('room') }
-  dispatch(action)
-  ws.emit('update', action)
+  const { room, player, won } = getState()
+  if(!won){
+    const box = $(e.target)
+    const action = { type: 'MOVE', x: box.attr('data-x'), y: box.attr('data-y'), player, room }
+    dispatch(action)
+    ws.emit('update', action)
+  }
 })
 
 // Join listeners
@@ -37,7 +44,9 @@ ws.on('update', (move) => {
 })
 
 // Rendering
-subscribe(renderBoard($('#board')))
+subscribe(renderBoard($board))
+subscribe(renderStatus($scoreboard))
+subscribe(renderScore($scoreboard))
 
 // Initialize the game
 const startGame = (room) => {

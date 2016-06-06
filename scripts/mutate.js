@@ -17,7 +17,6 @@ const mutate = (action, state) => {
       })
     case 'MOVE':
       // Can't move if it's not user's turn to play
-      console.log('MOVE', 'LOCAL', state.player, 'ACTION', action.player, 'TURN', state.nowPlaying)
       if (action.player !== state.nowPlaying) return state
 
       // Can't play already played field
