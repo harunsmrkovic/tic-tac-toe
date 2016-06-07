@@ -25,6 +25,7 @@ const send = (action, state) => {
 	}
 }
 
+
 // Action sending
 tictac.subscribe(send, ['MOVE', 'START'])
 
