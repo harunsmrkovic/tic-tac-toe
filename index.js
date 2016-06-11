@@ -52,7 +52,7 @@ subscribe(wonCheck, ['MOVE'])
 
 // Initialize the game
 const startGame = (room) => {
-  if(!room || isNaN(room)) room = _.random(roomNoMin, roomNoMax)
+  if(!room || isNaN(room)) room = _.random(config.room.min, config.room.max)
   dispatch({ type: 'INIT', size: 3, room })
   ws.emit('join', room)
 }
