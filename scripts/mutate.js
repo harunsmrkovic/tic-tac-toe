@@ -21,7 +21,7 @@ const mutate = (action, state) => {
       if (action.player !== state.nowPlaying) return state
 
       // Can't play already played field
-      if (state.board[action.y][action.x] > 0) return state
+      if (state.board[action.x][action.y] > 0) return state
 
       // Can't play if someone won
       if(state.won) return state

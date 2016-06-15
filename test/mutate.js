@@ -63,7 +63,7 @@ describe('Mutation check', function() {
         { board: [[1,1,0],[0,0,0],[0,0,0]], nowPlaying: 2 }
       ),
       {
-        board: [[1,1,0],[0,0,0],[2,0,0]],
+        board: [[1,1,2],[0,0,0],[0,0,0]],
         nowPlaying: 1,
         won: false
       }
