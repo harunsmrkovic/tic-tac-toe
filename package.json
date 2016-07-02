@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --progress --colors --port 8888",
+    "build": "webpack -p; babel socket.js --out-file socket-compiled.js",
     "test": "mocha --compilers js:babel-register --no-colors",
     "test watch": "mocha --compilers js:babel-register --no-colors --watch",
     "sockets": "babel socket.js --out-file socket-compiled.js && node socket-compiled.js"
