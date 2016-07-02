@@ -1,6 +1,6 @@
 const config = {
   socket: {
-    url: 'http://localhost:3000'
+    url: 'http://178.62.97.227:3000'
   },
   room: {
     min: 1000,
